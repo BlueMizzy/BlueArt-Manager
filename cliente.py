@@ -1,11 +1,12 @@
 import os
 from time import sleep
-import utils, menu, comissao, arquivo, json, arquivo
+import utils, menu, comissao, json
+import arquivo
 
 def add_cliente():
-    if os.path.exists('clientes.json'):                                 # checa se o arquivo clientes.json existe
-        with open('clientes.json', 'r', encoding='utf-8') as arquivo:
-            clientes = json.load(arquivo)
+    if os.path.exists('clientes.json'):            # checa se o arquivo clientes.json existe
+        clientes = arquivo.ler_json('Clientes.json')
+    
         print(f'--- Arquivo encontrado! {len(clientes)} clientes carregados. ---')
     else:
         clientes = {}
@@ -31,13 +32,10 @@ def add_cliente():
         email = input('Email: ').capitalize().strip()
         cidade = input('Cidade: ').capitalize().strip()
 
-        opcao = comissao.add_comissao(nome)
+        opcao, confirm = comissao.add_comissao(nome)
         stts = comissao.status_comissao()
-
-        comfirm = input('Tem certeza que deseja adicionar este cliente? [S/N]: ').strip().capitalize()
-        print()
         
-        if comfirm == 'S':
+        if confirm == 'S':
             print(f'Cliente {nome} adicionado com sucesso!')
         
             clientes[nome] = {
@@ -52,8 +50,7 @@ def add_cliente():
                 'hora': utils.hora()
         }
 
-            with open('clientes.json', 'w', encoding='utf-8') as arquivo:                  # faz a atualização do arquivo clientes.json com os novos dados
-                    json.dump(clientes, arquivo, indent=4, ensure_ascii=False)
+            arquivo.salvar_json('clientes.json', clientes)
 
             print()
             print('--- Cliente adicionado ---')
@@ -65,10 +62,12 @@ def add_cliente():
             sleep(2)
             return menu.menu_principal()
 
+
+
 def listar_clientes(clientes):                              # lista todos os clientes cadastrados no arquivo clientes.json
     print('\n--- LISTA DE CLIENTES ---')
 
-    dicionario = arquivo.json_simples(clientes)
+    dicionario = arquivo.ler_json(clientes)
 
     for nome, info in dicionario.items():
         print(f'Nome: {nome}')
@@ -83,12 +82,11 @@ def listar_clientes(clientes):                              # lista todos os cli
 def editar_cliente(clientes):
     print('\n--- EDITAR CLIENTE ---')
 
-    with open ('clientes.json', 'r', encoding='utf-8') as arquivo:
-        dicionario = json.load(arquivo)
+    dicio = arquivo.ler_json(clientes)
         
     nome = input('Digite o nome do cliente que deseja encontrar: ').capitalize().strip()
 
-    if nome in dicionario:
+    if nome in dicio:
         print(f'Cliente encontrado: {nome}')
 
         print()
@@ -96,27 +94,27 @@ def editar_cliente(clientes):
         print()
 
         print(f'Nome: {nome}')
-        print(f'Sexo: {dicionario[nome]["sexo"]}')
-        print(f'idade: {dicionario[nome]["idade"]}')
-        print(f'Celular: {dicionario[nome]["celular"]}')
-        print(f'Email: {dicionario[nome]["email"]}')
-        print(f'Cidade: {dicionario[nome]["cidade"]}')
+        print(f'Sexo: {dicio[nome]["sexo"]}')
+        print(f'idade: {dicio[nome]["idade"]}')
+        print(f'Celular: {dicio[nome]["celular"]}')
+        print(f'Email: {dicio[nome]["email"]}')
+        print(f'Cidade: {dicio[nome]["cidade"]}')
 
         print()
         campo = input('Escreva qual campo deseja editar (nome, sexo, idade, celular, email, cidade): ').lower().strip()
 
-        if campo in dicionario[nome]:
+        if campo in dicio[nome]:
             novo_valor = input(f'Novo valor para {campo}: ')
-            dicionario[nome][campo] = novo_valor
+            dicio[nome][campo] = novo_valor
 
-            with open('clientes.json', 'w', encoding='utf-8') as arquivo:
-                json.dump(dicionario, arquivo, indent=4, ensure_ascii=False)
+            arquivo.salvar_json('clientes.json', dicio)
+
 
 
 def pesquisar_cliente(clientes):
     print('\n--- PESQUISAR CLIENTE ---')
 
-    dicionario = arquivo.json_simples(clientes)
+    dicionario = arquivo.ler_json(clientes)
 
     nome = input('Digite o nome do cliente que deseja encontrar: ').capitalize().strip()
     print()
@@ -130,8 +128,7 @@ def pesquisar_cliente(clientes):
 def excluir_cliente(clientes):
     print('\n--- EXCLUIR CLIENTE ---')
 
-    with open ('clientes.json', 'r', encoding='utf-8') as arquivo:
-            dicionario = json.load(arquivo)
+    dicionario = arquivo.ler_json(clientes)
 
     nome = input('Digite o nome do cliente que deseja excluir: ').capitalize().strip()
 
@@ -142,8 +139,7 @@ def excluir_cliente(clientes):
             del dicionario[nome]
             print(f'Cliente {nome} excluído com sucesso.')
 
-            with open('clientes.json', 'w', encoding='utf-8') as arquivo:
-                json.dump(dicionario, arquivo, indent=4, ensure_ascii=False)
+            arquivo.salvar_json('clientes.json', dicionario)
 
         else:
             print('Exclusão cancelada.')

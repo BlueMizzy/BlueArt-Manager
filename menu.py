@@ -3,6 +3,8 @@ import cliente
 import comissao
 import faturamento
 
+# Cara ta muito repetitivo ainda, não sei fazer uma função generica para fazer menus. Vou fazer assim por enquanto e depois eu aprendo.
+
 def menu_principal():
     tam = 40
 
@@ -13,7 +15,7 @@ def menu_principal():
         '4': 'Menu de Configuração',
         '0': 'Sair'
     }
-
+# É a refatoração dos menus, repeti a base em todos eles. Um dia eu mudo.
 
     while True:
         print(f'+{"-" * tam}+')
@@ -21,7 +23,7 @@ def menu_principal():
         print(f'+{"-" * tam}+')
 
         for i, j in opcoes.items():
-            print(f'|{f" {i} - {j}":<{tam}}|')
+            print(f'|{f" {i} - {j}":<{tam}}|')         # centralizar a esquerda no espaço definido pela variavel tam
         print(f'+{"-" * tam}+')
 
         op = input("Escolha: ")
@@ -37,16 +39,16 @@ def menu_principal():
 
         match op:
             case '1':
-                menu_cliente()
+                menu_clientes()
 
             case '2':
-                menu_comissoes()
+                menu_comissao()
 
             case '3':
-                menu_faturamento()
+                faturamento.menu_faturamento()
 
 
-def menu_cliente():
+def menu_clientes():
     tam = 40
 
     opcoes = {
@@ -84,113 +86,66 @@ def menu_cliente():
                 cliente.add_cliente()
 
             case '2':
-                cliente.listar_clientes()
+                cliente.listar_clientes('clientes.json')
 
             case '3':
-                cliente.editar_cliente()
+                cliente.editar_cliente('clientes.json')
 
             case '4':
-                cliente.pesquisar_cliente()
+                cliente.pesquisar_cliente('clientes.json')
 
             case '5':
-                cliente.excluir_cliente()
+                cliente.excluir_cliente('clientes.json')
                 
 
+def menu_comissao():
+    tam = 40
+
+    opcoes = {
+        '1': 'Comissões em andamento',
+        '2': 'Comissões pendentes',
+        '3': 'Comissões finalizadas',
+        '4': 'Comissões canceladas',
+        '5': 'Mudas status',
+        '0': 'Voltar ao menu principal'
+    }
 
 
-# def menu_clientes():
-#     print('-' * 40)
-#     print(f'{"MENU CLIENTES":^40}')
-#     print('-' * 40)
+    while True:
+        print(f'+{"-" * tam}+')
+        print(f'|{"COMISSÕES":^{tam}}|')
+        print(f'+{"-" * tam}+')
 
-#     lista = []
+        for i, j in opcoes.items():
+            print(f'|{f" {i} - {j}":<{tam}}|')
+        print(f'+{"-" * tam}+')
 
-#     print('[1] Adicionar cliente')
-#     print('[2] Listar clientes')
-#     print('[3] Editar cliente')
-#     print('[4] Pesquisar cliente')
-#     print('[5] Excluir cliente')
-#     print('[0] Voltar ao menu principal')
+        op = input("Escolha: ")
 
-#     resposta = input('Escolha uma opção: ').strip()
-#     if resposta == '0':
-#         return
-#     elif resposta == '1':
-#         cliente.add_cliente()
-#     elif resposta == '2':  
-#         sleep(1)
-#         cliente.listar_clientes('clientes.json')
-#         print()
-#     elif resposta == '3':
-#         sleep(1)
-#         cliente.editar_cliente('clientes.json')
-#     elif resposta == '4':
-#         sleep(1)
-#         cliente.pesquisar_cliente('clientes.json')
-#     elif resposta == '5':
-#         sleep(1)
-#         cliente.excluir_cliente('clientes.json')
-#     menu_clientes()
+        if op not in opcoes:
+            print('Opção inválida')
+            continue
 
+        if op == '0':
+            print('Voltando...')
+            break
 
-def menu_comissoes():
-    print('-' * 40)
-    print(f'{"MENU COMISSÕES":^40}')
-    print('-' * 40)
+        print(f'>>> {opcoes[op]}\n')
 
-    print('[1] Ver comissões em andamento')
-    print('[2] Ver comissões pendentes')
-    print('[3] Ver comissões finalizadas')
-    print('[4] ver comissões canceladas')
-    print('[5] Mudar status de comissão')
-    print('[0] Voltar ao menu principal')
+        match op:
+            case '1':
+                comissao.listar_comissoes_por_status('Em andamento')
 
-    resposta = input('Escolha uma opção: ').strip()
+            case '2':
+                comissao.listar_comissoes_por_status('Pendente')
 
-    if resposta == '0':
-        return
-    elif resposta == '1':
-        sleep(1)
-        comissao.listar_comissoes_por_status('Em andamento')
-    elif resposta == '2':
-        sleep(1)
-        comissao.listar_comissoes_por_status('Pendente')
-    elif resposta == '3':
-        sleep(1)
-        comissao.listar_comissoes_por_status('Finalizada')
-    elif resposta == '4':
-        sleep(1)
-        comissao.listar_comissoes_por_status('Cancelada')
-    elif resposta == '5':
-        sleep(1)
-        comissao.mudar_status_comissao()
-    else:
-        print('Opção inválida. Voltando ao menu principal...')
-        sleep(2)
-        return
+            case '3':
+                comissao.listar_comissoes_por_status('Finalizada')
 
+            case '4':
+               comissao.listar_comissoes_por_status('Cancelada')
 
-def menu_faturamento():
-    print('-' * 40)
-    print(f'{"MENU FATURAMENTO":^40}')
-    print('-' * 40)
+            case '5':
+                comissao.mudar_status_comissao()
 
-    print('[1] Ver faturamento do dia')
-    print('[2] Ver faturamento do mês')
-    print('[0] Voltar ao menu principal')
-
-    resposta = input('Escolha uma opção: ').strip()
-
-    if resposta == '0':
-        return
-    elif resposta == '1':
-        sleep(1)
-        faturamento.faturamento()
-    elif resposta == '2':
-        sleep(1)
-        faturamento.faturamento_mes()
-    else:
-        print('Opção inválida. Voltando ao menu principal...')
-        sleep(2)
-        return 
     

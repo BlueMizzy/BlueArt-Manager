@@ -6,57 +6,58 @@ import os
 import utils
 import json
 
-def extra(opc):                                                  # Pergunta se o cliente quer mais alguma coisa na ilustração
-    print('INFORMAÇÕES EXTRAS DA COMISSÃO')                         # adicionais, como armas, fundo detalhado, animal, etc
-    print('-' * 40)
+# def extra(opc):                                                  # Pergunta se o cliente quer mais alguma coisa na ilustração
+#     print('INFORMAÇÕES EXTRAS DA COMISSÃO')                         # adicionais, como armas, fundo detalhado, animal, etc
+#     print('-' * 40)
 
-    lista = ['Personagem', 'Fundo detalhado', 'Armas', 'Animal']
-    extras ={}
+#     lista = ['Personagem', 'Fundo detalhado', 'Armas', 'Animal']
+#     extras ={}
 
-    for c in lista:
-        item = input(f'Deseja adicionar {c}? [S/N]: ').strip().upper()
-        if item == 'S':
-           q = int(input('Quantos: '))
-           porcento = float(input('Qual porcentagem adicional? '))
+#     for c in lista:
+#         item = input(f'Deseja adicionar {c}? [S/N]: ').strip().upper()
+#         if item == 'S':
+#            q = int(input('Quantos: '))
+#            porcento = float(input('Qual porcentagem adicional? '))
 
-           extras[c] = {
-               'quant': q,
-               'porcentagem': porcento
-           }
-        else:
-            print(f'Tudo bem, sem {c}')
+#            extras[c] = {
+#                'quant': q,
+#                'porcentagem': porcento
+#            }
+#         else:
+#             print(f'Tudo bem, sem {c}')
 
-        print(f'\n{extras}')
+#         print(f'\n{extras}')
 
-    calculo_extra(opc, extras)                         # chama a função de calculo_extra para calcular o valor total da comissão
-    final = input('Essa comissão foi finalizada? [S/N]: ').upper().strip()
-    print()
+# calculo_extra(opc, extras)                         # chama a função de calculo_extra para calcular o valor total da comissão
+# final = input('Essa comissão foi finalizada? [S/N]: ').upper().strip()
+# print()
 
-    if final =='S':
-        data = utils.data(),utils.hora()
+# if final =='S':
+#     data = utils.data(),utils.hora()
 
-        return data
-    else:
-        print('ainda em desenvolvimento a partir daqui!')
-        return None                                         # return None para caso o cliente não finalize a comissão, para não dar erro no main.py
+#     return data
+# else:
+#     print('ainda em desenvolvimento a partir daqui!')
+#     return None                                         # return None para caso o cliente não finalize a comissão, para não dar erro no main.py
 
 
-def calculo_extra(escolha, itm):                       #itm é item, eu so fiquei sem ideia para nome do parametro
+# def calculo_extra(escolha, itm):                       #itm é item, eu so fiquei sem ideia para nome do parametro
     
-    print()
-    print('O cliente quis adicionar: ')
-    soma = 0
+#     print()
+#     print('O cliente quis adicionar: ')
+#     soma = 0
 
-    for nome_item, c in itm.items():                # Aqui uso o for para listar apenas o que foi escolhido com Sim
-        print(f'{c['quant']} {nome_item}')
+#     for nome_item, c in itm.items():                # Aqui uso o for para listar apenas o que foi escolhido com Sim
+#         print(f'{c['quant']} {nome_item}')
 
-        calculo = escolha['brl'] * (c['porcentagem'] / 100)
-        calculo *= c['quant']
-        soma += calculo
+#         calculo = escolha['brl'] * (c['porcentagem'] / 100)
+#         calculo *= c['quant']
+#         soma += calculo
 
-    print()
-    total = escolha['brl'] + soma
-    print(f'O valor total da comissão é: R${total:.2f}')
+#     print()
+#     total = escolha['brl'] + soma
+#     print(f'O valor total da comissão é: R${total:.2f}')
+
 
 
 def add_comissao(cliente):
@@ -82,16 +83,13 @@ def add_comissao(cliente):
             print()
 
             resposta = input('Deseja confirmar esta opção? [S/N]: ').strip().upper()
-
-            if resposta == 'S':
-                print(f'Opção confirmada!')
-                print()
             
-            return opcao_escolhida
+            return opcao_escolhida, resposta
 
         else:
             print('Opção invalida! Tente novamente.')   
             print() 
+
 
 
 def status_comissao():
@@ -100,11 +98,11 @@ def status_comissao():
     return stts
 
 
+
 def mudar_status_comissao():
     print('\n--- MUDAR STATUS DA COMISSÃO ---')
 
-    with open('clientes.json', 'r', encoding='utf-8') as arquivo:
-        dicionario = json.load(arquivo)
+    dicionario = arquivo.ler_json('clientes.json')
 
     nome = input('Digite o nome do cliente para mudar o status da comissão: ').capitalize().strip()
 
@@ -135,19 +133,19 @@ def mudar_status_comissao():
 
         print(f'Status da comissão do cliente {nome} alterado para: {cliente_info["status"]}')
 
-        with open('clientes.json', 'w', encoding='utf-8') as arquivo:
-            json.dump(dicionario, arquivo, indent=4, ensure_ascii=False)
+        arquivo.salvar_json('clientes.json', dicionario)
 
     else:
         print(f'Cliente {nome} não encontrado. Voltando ao menu principal....')
         sleep(2)
         return
+
+
         
 def listar_comissoes_por_status(status):
     print(f'\n--- LISTA DE COMISSÕES {status.upper()} ---')
 
-    with open('clientes.json', 'r', encoding='utf-8') as arquivo:
-        dicionario = json.load(arquivo)
+    dicionario = arquivo.ler_json('clientes.json')
 
     comissao_filtrada = {
         nome: info
