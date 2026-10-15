@@ -10,9 +10,9 @@ def add_cliente():
         print(f'--- Arquivo encontrado! {len(clientes)} clientes carregados. ---')
     else:
         clientes = {}
-        print('--- Nenhum arquivo encontrado. Criando nova lista. ---')
+        print('>>> Nenhum arquivo encontrado. Criando nova lista...')
 
-    while True:                                                         #loop para adicionar clientes
+    while True:                     #loop para adicionar clientes
         print()
         print('\n--- ADICIONAR NOVO CLIENTE ---')
         nome = input('Nome do cliente (ou "sair"): ').capitalize().strip()
@@ -22,7 +22,8 @@ def add_cliente():
 
         sexo = input('Sexo (F/M): ').capitalize().strip()
         if sexo not in 'FM':
-            sexo = input('Tente novamente. Sexo (F/M): ').capitalize().strip()
+            print('Tente npvamente.')
+            sexo = input()
 
         idade = int(input('idade: '))
         if idade < 18:
@@ -53,7 +54,7 @@ def add_cliente():
             arquivo.salvar_json('clientes.json', clientes)
 
             print()
-            print('--- Cliente adicionado ---')
+            print('>>> Cliente adicionado!')
             print(f'Agora temos {len(clientes)} clientes cadastrados.')
             return clientes
 
@@ -63,13 +64,13 @@ def add_cliente():
             return menu.menu_principal()
 
 
-
-def listar_clientes(clientes):                              # lista todos os clientes cadastrados no arquivo clientes.json
+                            # lista todos os clientes cadastrados no arquivo clientes.json
+def listar_clientes(clientes):
     print('\n--- LISTA DE CLIENTES ---')
 
-    dicionario = arquivo.ler_json(clientes)
+    dicio = arquivo.ler_json(clientes)
 
-    for nome, info in dicionario.items():
+    for nome, info in dicio.items():
         print(f'Nome: {nome}')
         print(f'Sexo: {info["sexo"]}')
         print(f'Idade: {info["idade"]}')
@@ -77,6 +78,7 @@ def listar_clientes(clientes):                              # lista todos os cli
         print(f'Email: {info["email"]}')
         print(f'Cidade: {info["cidade"]}')
         print('-' * 30)
+
 
 
 def editar_cliente(clientes):
@@ -101,7 +103,7 @@ def editar_cliente(clientes):
         print(f'Cidade: {dicio[nome]["cidade"]}')
 
         print()
-        campo = input('Escreva qual campo deseja editar (nome, sexo, idade, celular, email, cidade): ').lower().strip()
+        campo = input('Digite sua escolha: \n- nome \n- sexo \n- idade \n- celular \n- email \n- cidade: ').lower().strip() #mexer nisso aqui para ficar mais bonito e organizado
 
         if campo in dicio[nome]:
             novo_valor = input(f'Novo valor para {campo}: ')
@@ -114,32 +116,33 @@ def editar_cliente(clientes):
 def pesquisar_cliente(clientes):
     print('\n--- PESQUISAR CLIENTE ---')
 
-    dicionario = arquivo.ler_json(clientes)
+    dicio = arquivo.ler_json(clientes)
 
-    nome = input('Digite o nome do cliente que deseja encontrar: ').capitalize().strip()
+    nome = input('Pesquisar: ').capitalize().strip()
     print()
-    if nome in dicionario:
-        for i, j in dicionario[nome].items():
+    if nome in dicio:
+        for i, j in dicio[nome].items():
             print(f'{i.capitalize()}: {j}')
     else:
         print('Cliente não encontrado.')
 
 
+
 def excluir_cliente(clientes):
     print('\n--- EXCLUIR CLIENTE ---')
 
-    dicionario = arquivo.ler_json(clientes)
+    dicio = arquivo.ler_json(clientes)
 
-    nome = input('Digite o nome do cliente que deseja excluir: ').capitalize().strip()
+    nome = input('Excluir o cliente: ').capitalize().strip()
 
-    if nome in dicionario:
+    if nome in dicio:
         confirmacao = input(f'Tem certeza que deseja excluir {nome}? (S/N): ').strip().upper()
 
         if confirmacao == 'S':
-            del dicionario[nome]
+            del dicio[nome]
             print(f'Cliente {nome} excluído com sucesso.')
 
-            arquivo.salvar_json('clientes.json', dicionario)
+            arquivo.salvar_json('clientes.json', dicio)
 
         else:
             print('Exclusão cancelada.')

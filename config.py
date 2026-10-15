@@ -13,15 +13,15 @@ def opcao_commBR():                         # Opções de tamanho, pintura e tip
 def config_artista():      # Pega nome real e artístico do usuario e coloca em um dicionário
     dados_artista = {}
 
-    nome = input('>>>> Qual é seu nome? ').strip().capitalize()
-    print(f'Olá, é um prazer te ter aqui {nome}.')
+    nome = input('>>> Como se chama? ').strip().capitalize()
+    print(f'Olá, é um prazer te ter aqui.')
     print()
 
-    resposta = input('>>>> Você tem nome artístico? [S/N] ').strip().capitalize()
+    resposta = input('>>> Você usa algum nome artístico? [S/N] ').strip().capitalize()
 
     if resposta == 'S':
         print()
-        nome_artistico = input('>>>> Digite seu nome artistico: ').strip().capitalize()
+        nome_artistico = input('Nome artistico: ').strip().capitalize()
         print(f'Perfeito. Vamos continuar, {nome_artistico}')
     else:
         print(f'Okay, vamos continuar {nome}')
@@ -34,22 +34,4 @@ def config_artista():      # Pega nome real e artístico do usuario e coloca em 
     dados_artista['idade'] = idade
     
     return dados_artista
-        
-
-def inicio_turno():                                                              # Começa o programa em loop
-    escolha = input('Iniciar? [S/N] (N vai parar) ').strip().capitalize()
-    print('-' * 40)
-
-    while True:
-        if escolha == 'N':
-            print('Okay. Encerrando...')
-            sleep(2)
-            break
-        else:
-            if escolha == 'S':
-                cliente = input('Nome do cliente: ').strip().capitalize()
-                print(f'Veja qual opção o(a) {cliente} quer: ')
-                print()
-                
-        return cliente
 

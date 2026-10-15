@@ -102,18 +102,18 @@ def status_comissao():
 def mudar_status_comissao():
     print('\n--- MUDAR STATUS DA COMISSÃO ---')
 
-    dicionario = arquivo.ler_json('clientes.json')
+    dicio = arquivo.ler_json('clientes.json')
 
-    nome = input('Digite o nome do cliente para mudar o status da comissão: ').capitalize().strip()
+    nome = input('Nome do cliente: ').capitalize().strip()
 
-    if nome in dicionario:
-        cliente_info = dicionario[nome]
+    if nome in dicio:
+        cliente_info = dicio[nome]
 
-        print(f'Cliente: {nome}')
+        print(f'Cliente: {nome}')   #mostrar apenas informações escolhidas
         print(f'Comissão atual: {cliente_info["opcao"]["tipo"]}, {cliente_info["opcao"]["tamanho"]}, R${cliente_info["opcao"]["brl"]:.2f}')
         print(f'Status atual: {cliente_info["status"]}')
 
-        print('\nEscolha o novo status da comissão:')
+        print('\nNovo status:')
 
         status = int(input('[1] Em andamento\n[2] Pendente\n[3] Finalizada\n[4] Cancelada\nDigite o número correspondente: '))
 
@@ -133,7 +133,7 @@ def mudar_status_comissao():
 
         print(f'Status da comissão do cliente {nome} alterado para: {cliente_info["status"]}')
 
-        arquivo.salvar_json('clientes.json', dicionario)
+        arquivo.salvar_json('clientes.json', dicio)
 
     else:
         print(f'Cliente {nome} não encontrado. Voltando ao menu principal....')
@@ -145,12 +145,12 @@ def mudar_status_comissao():
 def listar_comissoes_por_status(status):
     print(f'\n--- LISTA DE COMISSÕES {status.upper()} ---')
 
-    dicionario = arquivo.ler_json('clientes.json')
+    dicio = arquivo.ler_json('clientes.json')
 
     comissao_filtrada = {
         nome: info
 
-        for nome,info in dicionario.items()
+        for nome,info in dicio.items()
         if info.get('status') == status
     }
 
