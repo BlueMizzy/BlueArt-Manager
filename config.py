@@ -1,4 +1,4 @@
-import json
+import json, os, arquivo
 from time import sleep
 def opcao_commBR():                         # Opções de tamanho, pintura e tipo de arte
     comm = [{'tipo': 'Sketch', 'tamanho': 'Busto', 'brl': 15.00}, {'tipo': 'Sketch', 'tamanho': 'Half body', 'brl': 35.00}, 
@@ -9,29 +9,39 @@ def opcao_commBR():                         # Opções de tamanho, pintura e tip
     return comm
 
 
-
-def config_artista():      # Pega nome real e artístico do usuario e coloca em um dicionário
-    dados_artista = {}
-
-    nome = input('>>> Como se chama? ').strip().capitalize()
-    print(f'Olá, é um prazer te ter aqui.')
-    print()
-
-    resposta = input('>>> Você usa algum nome artístico? [S/N] ').strip().capitalize()
-
-    if resposta == 'S':
-        print()
-        nome_artistico = input('Nome artistico: ').strip().capitalize()
-        print(f'Perfeito. Vamos continuar, {nome_artistico}')
-    else:
-        print(f'Okay, vamos continuar {nome}')
-        nome_artistico = nome
-
-    idade = int(input('Idade: '))
-
-    dados_artista['nome'] = nome
-    dados_artista['nome_artistico'] = nome_artistico
-    dados_artista['idade'] = idade
+def verifica_arquivo(nome_arquivo, nome_dicio):     # Ve se o arquivo chamado existe
+    if os.path.exists(nome_arquivo):            
+        nome_dicio = arquivo.ler_json(nome_arquivo)
     
-    return dados_artista
+        print(f'--- Arquivo encontrado! ---\n')
+        return nome_dicio
+    else:
+        nome_dicio = {}
+        print('>>> Nenhum arquivo encontrado. Criando arquivo...\n')
+        sleep(2)
 
+        return nome_dicio
+
+
+def Artista():      # Pega os dados do usuario e coloca em um dicionário
+    
+    dados_artista = verifica_arquivo('artista.json', 'artista')
+
+    if not dados_artista:
+        print('--- DADOS DO ARTISTA ---\n')
+        nome = input('Nome: ').capitalize().strip()
+        idade = int(input('Idade: '))
+
+        dados_artista = {
+            'nome': nome,
+            'idade': idade
+        }
+
+        arquivo.salvar_json('artista.json', dados_artista)
+        print('Dados salvos!')
+        
+    else:
+        print(f'Bem vindo(a) de volta {dados_artista['nome']}!')
+        sleep(3)
+
+    return dados_artista
