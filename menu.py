@@ -1,41 +1,41 @@
 from time import sleep
-import cliente
-import comissao
-import faturamento
+import cliente, comissao, faturamento
 
-# Cara ta muito repetitivo ainda, não sei fazer uma função generica para fazer menus. Vou fazer assim por enquanto e depois eu aprendo.
+def criar_menu(titulo, opcoes, tam=40):
+    while True:
+        print(f'+{"-" * tam}+')
+        print(f'|{titulo:^{tam}}|')
+        print(f'+{"-" * tam}+')
+
+        for numero, descricao in opcoes.items():
+            print(f'|{f'{numero} - {descricao}':<{tam}}|')
+
+        print(f'+{"-" * tam}+')
+
+        op = input("Escolha: ")
+
+        if op in opcoes:
+            return op
+
+        print('Opção inválida.')
+
 
 def menu_principal():
-    tam = 40
-
     opcoes = {
         '1': 'Menu de Clientes',
         '2': 'Menu de Comissões',
         '3': 'Menu de Faturamento',
         '4': 'Menu de Configuração',
-        '0': 'Sair'
+        '0': 'Encerrar'
     }
-# É a refatoração dos menus, repeti a base em todos eles. Um dia eu mudo.
 
     while True:
-        print(f'+{"-" * tam}+')
-        print(f'|{"BLUEART MANAGER":^{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        for i, j in opcoes.items():
-            print(f'|{f" {i} - {j}":<{tam}}|')         # centralizar a esquerda no espaço definido pela variavel tam
-        print(f'+{"-" * tam}+')
-
-        op = input("Escolha: ")
-
-        if op not in opcoes:
-            print('Opção inválida')
-            continue
+        op = criar_menu('BLUEART MANAGER', opcoes)
 
         if op == '0':
+            print('Encerrando...')
+            sleep(2)
             break
-
-        print(f'>>> {opcoes[op]}\n')
 
         match op:
             case '1':
@@ -45,12 +45,13 @@ def menu_principal():
                 menu_comissao()
 
             case '3':
-                faturamento.menu_faturamento()
+                menu_faturamento()
+
+            case '4':
+                print('Em desenvolvimento.')
 
 
 def menu_clientes():
-    tam = 40
-
     opcoes = {
         '1': 'Adicionar',
         '2': 'Listar',
@@ -60,29 +61,17 @@ def menu_clientes():
         '0': 'Sair'
     }
 
-
     while True:
-        print(f'+{"-" * tam}+')
-        print(f'|{"CLIENTES":^{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        for i, j in opcoes.items():
-            print(f'|{f" {i} - {j}":<{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        op = input("Escolha: ")
-
-        if op not in opcoes:
-            print('Opção inválida')
-            continue
+        op = criar_menu('CLIENTES', opcoes)
 
         if op == '0':
-            break
-
-        print(f'>>> {opcoes[op]}\n')
+            print('Voltando...')
+            sleep(2)
+            return
 
         match op:
             case '1':
+                cliente.verifica_arquivo()
                 cliente.add_cliente()
 
             case '2':
@@ -96,41 +85,26 @@ def menu_clientes():
 
             case '5':
                 cliente.excluir_cliente('clientes.json')
-                
+
 
 def menu_comissao():
-    tam = 40
-
     opcoes = {
         '1': 'Comissões em andamento',
         '2': 'Comissões pendentes',
         '3': 'Comissões finalizadas',
         '4': 'Comissões canceladas',
-        '5': 'Mudas status',
+        '5': 'Mudar status',
         '0': 'Voltar ao menu principal'
     }
 
-
     while True:
-        print(f'+{"-" * tam}+')
-        print(f'|{"COMISSÕES":^{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        for i, j in opcoes.items():
-            print(f'|{f" {i} - {j}":<{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        op = input("Escolha: ")
-
-        if op not in opcoes:
-            print('Opção inválida')
-            continue
+        op = criar_menu('COMISSÕES', opcoes)
 
         if op == '0':
             print('Voltando...')
-            break
-
-        print(f'>>> {opcoes[op]}\n')
+            sleep(2)
+            return
+        
 
         match op:
             case '1':
@@ -143,9 +117,30 @@ def menu_comissao():
                 comissao.listar_comissoes_por_status('Finalizada')
 
             case '4':
-               comissao.listar_comissoes_por_status('Cancelada')
+                comissao.listar_comissoes_por_status('Cancelada')
 
             case '5':
                 comissao.mudar_status_comissao()
 
-    
+
+def menu_faturamento():
+    opcoes = {
+        '1': 'Faturamento do dia',
+        '2': 'Faturamento do mês',
+        '0': 'Voltar ao menu principal'
+    }
+
+
+    while True:
+        op = criar_menu('FATURAMENTO', opcoes)
+
+        if op == '0':
+            print('Voltando...')
+            return
+
+        match op:
+            case '1':
+                faturamento.faturamento_dia()
+                
+            case '2':
+                faturamento.faturamento_mes()
