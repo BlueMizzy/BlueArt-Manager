@@ -1,3 +1,4 @@
+from logging import INFO
 import os
 from time import sleep
 import utils, menu, comissao, config, arquivo
@@ -64,13 +65,7 @@ def listar_clientes(clientes):
     dicio = arquivo.ler_json(clientes)
 
     for nome, info in dicio.items():
-        print(f'Nome: {nome}')
-        print(f'Sexo: {info["sexo"]}')
-        print(f'Idade: {info["idade"]}')
-        print(f'Celular: {info["celular"]}')
-        print(f'Email: {info["email"]}')
-        print(f'Cidade: {info["cidade"]}')
-        print('-' * 30)
+        exibir_dados_cliente(nome, dicio)
 
 
 
@@ -82,21 +77,17 @@ def editar_cliente(clientes):
     nome = input('Digite o nome do cliente que deseja encontrar: ').capitalize().strip()
 
     if nome in dicio:
-        print(f'Cliente encontrado: {nome}')
+        print(f'Cliente encontrado!')
 
         print()
         print('>>> INFORMAÇÕES ATUAIS')
         print()
 
-        print(f'Nome: {nome}')
-        print(f'Sexo: {dicio[nome]["sexo"]}')
-        print(f'idade: {dicio[nome]["idade"]}')
-        print(f'Celular: {dicio[nome]["celular"]}')
-        print(f'Email: {dicio[nome]["email"]}')
-        print(f'Cidade: {dicio[nome]["cidade"]}')
+        exibir_dados_cliente(nome, dicio)
 
         print()
-        campo = input('Digite sua escolha: \n- nome \n- sexo \n- idade \n- celular \n- email \n- cidade: ').lower().strip() #mexer nisso aqui para ficar mais bonito e organizado
+        print('Digite sua escolha: - nome, - sexo, - idade, - celular, - email, - cidade: ',sep=',')
+        campo = input().lower().strip()
 
         if campo in dicio[nome]:
             novo_valor = input(f'Novo valor para {campo}: ')
@@ -116,6 +107,7 @@ def pesquisar_cliente(clientes):
     if nome in dicio:
         for i, j in dicio[nome].items():
             print(f'{i.capitalize()}: {j}')
+            sleep(1)
     else:
         print('Cliente não encontrado.')
 
@@ -140,3 +132,13 @@ def excluir_cliente(clientes):
         else:
             print('Exclusão cancelada.')
 
+
+def exibir_dados_cliente(nome, info):
+    print(f'Nome: {nome}')
+    print(f'Sexo: {info[nome]["sexo"]}')
+    print(f'idade: {info[nome]["idade"]}')
+    print(f'Celular: {info[nome]["celular"]}')
+    print(f'Email: {info[nome]["email"]}')
+    print(f'Cidade: {info[nome]["cidade"]}')
+    print('-' * 30)
+    
