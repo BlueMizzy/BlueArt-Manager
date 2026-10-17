@@ -1,16 +1,9 @@
 import os
 from time import sleep
-import utils, menu, comissao, json
-import arquivo
+import utils, menu, comissao, config, arquivo
 
 def add_cliente():
-    if os.path.exists('clientes.json'):            # checa se o arquivo clientes.json existe
-        clientes = arquivo.ler_json('Clientes.json')
-    
-        print(f'--- Arquivo encontrado! {len(clientes)} clientes carregados. ---')
-    else:
-        clientes = {}
-        print('>>> Nenhum arquivo encontrado. Criando nova lista...')
+    clientes = config.verifica_arquivo('clientes.json', 'clientes')
 
     while True:                     #loop para adicionar clientes
         print()
@@ -34,7 +27,7 @@ def add_cliente():
         cidade = input('Cidade: ').capitalize().strip()
 
         opcao, confirm = comissao.add_comissao(nome)
-        stts = comissao.status_comissao()
+        stts = comissao.status_padrao()
         
         if confirm == 'S':
             print(f'Cliente {nome} adicionado com sucesso!')

@@ -1,10 +1,6 @@
 from time import sleep
-import config
+import config, arquivo, os, utils, json
 from datetime import datetime
-import arquivo
-import os
-import utils
-import json
 
 # def extra(opc):                                                  # Pergunta se o cliente quer mais alguma coisa na ilustração
 #     print('INFORMAÇÕES EXTRAS DA COMISSÃO')                         # adicionais, como armas, fundo detalhado, animal, etc
@@ -92,7 +88,7 @@ def add_comissao(cliente):
 
 
 
-def status_comissao():
+def status_padrao():
     stts = 'Em andamento'  # Valor padrão para status de comissão
 
     return stts
@@ -120,12 +116,16 @@ def mudar_status_comissao():
 
         if status == 1:
             cliente_info['status'] = 'Em andamento'
+
         elif status == 2:
             cliente_info['status'] = 'Pendente'
+
         elif status == 3:
             cliente_info['status'] = 'Finalizada'
+
         elif status == 4:
             cliente_info['status'] = 'Cancelada'
+            
         else:
             print('Opção inválida. Voltando ao menu principal....')
             sleep(2)
