@@ -1,47 +1,65 @@
-import json, os, arquivo
+import arquivo, comissao
 from time import sleep
-def opcao_commBR():                         # Opções de tamanho, pintura e tipo de arte
-    comm = [{'tipo': 'Sketch', 'tamanho': 'Busto', 'brl': 15.00}, {'tipo': 'Sketch', 'tamanho': 'Half body', 'brl': 35.00}, 
-    {'tipo': 'Sketch', 'tamanho': 'Full body', 'brl': 60.00}, {'tipo': 'Flat color', 'tamanho': 'Busto', 'brl': 30.00},
-    {'tipo': 'Flat color', 'tamanho': 'Half body', 'brl': 50.00}, {'tipo': 'Flat color', 'tamanho': 'Full body', 'brl': 75.00},
-    {'tipo': 'Full render', 'tamanho': 'Busto', 'brl': 50.00}, {'tipo': 'Full render', 'tamanho': 'Half body', 'brl': 80.00},
-    {'tipo': 'Full render', 'tamanho': 'Full body', 'brl': 120.00}]
-    return comm
 
+def analise():
+    artes = arquivo.verifica_arquivo('artes.json', 'artes')
+    print('--- CONFIGURAÇÃO ESTILOS DE ARTE ---\n')
 
-def verifica_arquivo(nome_arquivo, nome_dicio):     # Ve se o arquivo chamado existe
-    if os.path.exists(nome_arquivo):            
-        nome_dicio = arquivo.ler_json(nome_arquivo)
-    
-        print(f'--- Arquivo encontrado! ---\n')
-        return nome_dicio
+    if not artes: 
+        estilo = comissao.estilo_arte(artes)
     else:
-        nome_dicio = {}
-        print('>>> Nenhum arquivo encontrado. Criando arquivo...\n')
-        sleep(2)
+        escolha = input('Quer adicionar mais? [S/N]: ').upper().strip()
+        print()
 
-        return nome_dicio
+        if escolha == 'N':
+            print('Okay!')
+            sleep(2)
+            
+        elif escolha == 'S':
+            estilo = comissao.estilo_arte(artes)
+
 
 
 def Artista():      # Pega os dados do usuario e coloca em um dicionário
     
-    dados_artista = verifica_arquivo('artista.json', 'artista')
+    dados = arquivo.verifica_arquivo('artista.json', 'artista')
 
-    if not dados_artista:
+    if not dados:
         print('--- DADOS DO ARTISTA ---\n')
         nome = input('Nome: ').capitalize().strip()
-        idade = int(input('Idade: '))
+        nome_exibicao = input('Nome de exibição: ').strip()
+        email = input('Email: ').strip()
+        print()
 
-        dados_artista = {
+        dados = {
             'nome': nome,
-            'idade': idade
+            'nome_exibicao': nome_exibicao,
+            'email': email
         }
 
-        arquivo.salvar_json('artista.json', dados_artista)
-        print('Dados salvos!')
+        arquivo.salvar_json('artista.json', dados)
+        print('Dados salvos!\n')
+        print(f'seja bem vindo(a) {dados['nome_exibicao']}')
+        sleep(3)
         
     else:
-        print(f'Bem vindo(a) de volta {dados_artista['nome']}!')
+        print(f'>>> Bem vindo(a) de volta {dados['nome_exibicao']}! <<<'.upper())
         sleep(3)
 
-    return dados_artista
+    return dados
+
+
+def editar_dados_artista():
+    print('\n--- EDITAR CONFIGURAÇÃO DO ARTISTA ---')
+    
+    artista = arquivo.ler_json('artista.json')
+
+    print('\nEscolha qual campo editar: - Nome, - Nome de exibição, - email:', sep=',')
+    campo = input().strip()
+
+    if campo in artista:
+        novo_valor = input(f'Novo valor para {campo}')
+        artista[campo] = novo_valor
+        arquivo.salvar_json('artista.json', artista)
+
+    print(f'Você mudou seu {campo} para {novo_valor}')

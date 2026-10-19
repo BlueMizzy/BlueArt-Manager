@@ -1,161 +1,47 @@
 from time import sleep
-import config, arquivo, os, utils, json
-from datetime import datetime
+import arquivo
 
-# def extra(opc):                                                  # Pergunta se o cliente quer mais alguma coisa na ilustração
-#     print('INFORMAÇÕES EXTRAS DA COMISSÃO')                         # adicionais, como armas, fundo detalhado, animal, etc
-#     print('-' * 40)
-
-#     lista = ['Personagem', 'Fundo detalhado', 'Armas', 'Animal']
-#     extras ={}
-
-#     for c in lista:
-#         item = input(f'Deseja adicionar {c}? [S/N]: ').strip().upper()
-#         if item == 'S':
-#            q = int(input('Quantos: '))
-#            porcento = float(input('Qual porcentagem adicional? '))
-
-#            extras[c] = {
-#                'quant': q,
-#                'porcentagem': porcento
-#            }
-#         else:
-#             print(f'Tudo bem, sem {c}')
-
-#         print(f'\n{extras}')
-
-# calculo_extra(opc, extras)                         # chama a função de calculo_extra para calcular o valor total da comissão
-# final = input('Essa comissão foi finalizada? [S/N]: ').upper().strip()
-# print()
-
-# if final =='S':
-#     data = utils.data(),utils.hora()
-
-#     return data
-# else:
-#     print('ainda em desenvolvimento a partir daqui!')
-#     return None                                         # return None para caso o cliente não finalize a comissão, para não dar erro no main.py
-
-
-# def calculo_extra(escolha, itm):                       #itm é item, eu so fiquei sem ideia para nome do parametro
-    
-#     print()
-#     print('O cliente quis adicionar: ')
-#     soma = 0
-
-#     for nome_item, c in itm.items():                # Aqui uso o for para listar apenas o que foi escolhido com Sim
-#         print(f'{c['quant']} {nome_item}')
-
-#         calculo = escolha['brl'] * (c['porcentagem'] / 100)
-#         calculo *= c['quant']
-#         soma += calculo
-
-#     print()
-#     total = escolha['brl'] + soma
-#     print(f'O valor total da comissão é: R${total:.2f}')
-
-
-
+#essa função é chamada pelo add cliente, lista as opções e retorna as respostas
 def add_comissao(cliente):
-    print(f'Veja qual opção o(a) {cliente} quer: ')
+    print(f'\nQual opção o(a) {cliente} decidiu? ')
     print()
 
-    commission = config.opcao_commBR()  
+    dados = arquivo.ler_json('artes.json')
     
-    # Mostra a tabela de opções toda organizada
+    for i, j in dados.items():
+        print(f'{i} - {j}')
+
     while True:
-        print(f'{'PINTURA':<24} {'TAMANHO':<23} {'VALOR'}')
-        print()
+        opcao = input('Escolha: ')
 
-        for i, c in enumerate(commission, start=1):                                          #tabela
-            print(f'{i} - {c['tipo']:<20} {c['tamanho']:<23} {c['brl']:.2f}') 
-        print() 
+        if opcao not in dados:
+            print('Não existe essa opção.')
 
-        esc_comm = int(input('Digite aqui: '))                           #decisao
-
-        if 1 <= esc_comm <= len(commission):
-            opcao_escolhida = commission[esc_comm - 1]
-            print(f'O(a) {cliente} escolheu {opcao_escolhida['tamanho']}, {opcao_escolhida['tipo']} por R${opcao_escolhida['brl']:.2f}')
-            print()
-
+        else: 
+            estilo = dados.get(opcao)
+            print(f'Ele(a) escolheu {estilo}.\n')
             resposta = input('Deseja confirmar esta opção? [S/N]: ').strip().upper()
-            
-            return opcao_escolhida, resposta
 
-        else:
-            print('Opção invalida! Tente novamente.')   
-            print() 
+            return estilo, resposta
 
 
+def estilo_arte(artes):     
+    proximo_numero = len(artes) + 1
 
-def status_padrao():
-    stts = 'Em andamento'  # Valor padrão para status de comissão
+    print('Estilo de arte. ("0" para finalizar): \n')
+    print('Ex: Realismo, Retrato estilizado, etc.')
 
-    return stts
+    while True:
+        arte = input().capitalize().strip()
 
-
-
-def mudar_status_comissao():
-    print('\n--- MUDAR STATUS DA COMISSÃO ---')
-
-    dicio = arquivo.ler_json('clientes.json')
-
-    nome = input('Nome do cliente: ').capitalize().strip()
-
-    if nome in dicio:
-        cliente_info = dicio[nome]
-
-        print(f'Cliente: {nome}')   #mostrar apenas informações escolhidas
-        print(f'Comissão atual: {cliente_info["opcao"]["tipo"]}, {cliente_info["opcao"]["tamanho"]}, R${cliente_info["opcao"]["brl"]:.2f}')
-        print(f'Status atual: {cliente_info["status"]}')
-
-        print('\nNovo status:')
-
-        status = int(input('[1] Em andamento\n[2] Pendente\n[3] Finalizada\n[4] Cancelada\nDigite o número correspondente: '))
-
-
-        if status == 1:
-            cliente_info['status'] = 'Em andamento'
-
-        elif status == 2:
-            cliente_info['status'] = 'Pendente'
-
-        elif status == 3:
-            cliente_info['status'] = 'Finalizada'
-
-        elif status == 4:
-            cliente_info['status'] = 'Cancelada'
-            
-        else:
-            print('Opção inválida. Voltando ao menu principal....')
+        if arte == '0':
+            print('Salvando...')
             sleep(2)
-            return 
+            break
 
-        print(f'Status da comissão do cliente {nome} alterado para: {cliente_info["status"]}')
+        artes[str(proximo_numero)] = arte
+        proximo_numero += 1
 
-        arquivo.salvar_json('clientes.json', dicio)
+    arquivo.salvar_json('artes.json', artes)
 
-    else:
-        print(f'Cliente {nome} não encontrado. Voltando ao menu principal....')
-        sleep(2)
-        return
-
-
-        
-def listar_comissoes_por_status(status):
-    print(f'\n--- LISTA DE COMISSÕES {status.upper()} ---')
-
-    dicio = arquivo.ler_json('clientes.json')
-
-    comissao_filtrada = {
-        nome: info
-
-        for nome,info in dicio.items()
-        if info.get('status') == status
-    }
-
-    for nome, info in comissao_filtrada.items():
-        print(f'Nome do Cliente: {nome}')
-        print(f'Comissão: {info["opcao"]["tipo"]}, {info["opcao"]["tamanho"]}, R${info["opcao"]["brl"]:.2f}')
-
-    print(f'\nTotal de comissões {status}: {len(comissao_filtrada)}')
+    return artes

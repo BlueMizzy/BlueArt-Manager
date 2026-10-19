@@ -1,10 +1,9 @@
 from logging import INFO
-import os
 from time import sleep
-import utils, menu, comissao, config, arquivo
+import utils, comissao, config, arquivo, status
 
 def add_cliente():
-    clientes = config.verifica_arquivo('clientes.json', 'clientes')
+    clientes = arquivo.verifica_arquivo('clientes.json', 'clientes')
 
     while True:                     #loop para adicionar clientes
         print()
@@ -14,31 +13,16 @@ def add_cliente():
         if nome.lower() == 'sair':
             break
 
-        sexo = input('Sexo (F/M): ').capitalize().strip()
-        if sexo not in 'FM':
-            print('Tente npvamente.')
-            sexo = input()
-
-        idade = int(input('idade: '))
-        if idade < 18:
-            print('Por favor, informe o número do seu responsável.')
-
-        celular = input('Numero de celular: ')
         email = input('Email: ').capitalize().strip()
-        cidade = input('Cidade: ').capitalize().strip()
 
-        opcao, confirm = comissao.add_comissao(nome)
-        stts = comissao.status_padrao()
+        #chama a função add comissão para fazer as perguntas e guardar as respostas nas duas variaveis.
+
+        opcao, confirm = comissao.add_comissao(nome) 
+        stts = status.status_padrao()         #stts padrão 'em andamento'
         
         if confirm == 'S':
-            print(f'Cliente {nome} adicionado com sucesso!')
-        
             clientes[nome] = {
-                'sexo': sexo,
-                'idade': idade,
-                'celular': celular,
                 'email': email,
-                'cidade': cidade,
                 'opcao': opcao,
                 'status': stts,
                 'data': utils.data(),
@@ -50,12 +34,12 @@ def add_cliente():
             print()
             print('>>> Cliente adicionado!')
             print(f'Agora temos {len(clientes)} clientes cadastrados.')
-            return clientes
+            return clientes  
 
         else:
             print('Cliente não adicionado. Voltando ao menu principal...')
             sleep(2)
-            return menu.menu_principal()
+            return
 
 
                             # lista todos os clientes cadastrados no arquivo clientes.json
@@ -65,7 +49,7 @@ def listar_clientes(clientes):
     dicio = arquivo.ler_json(clientes)
 
     for nome, info in dicio.items():
-        exibir_dados_cliente(nome, dicio)
+        utils.exibir_dados_cliente(nome, dicio)
 
 
 
@@ -74,22 +58,18 @@ def editar_cliente(clientes):
 
     dicio = arquivo.ler_json(clientes)
         
-    nome = input('Digite o nome do cliente que deseja encontrar: ').capitalize().strip()
+    nome = input('Nome do cliente que deseja encontrar: ').capitalize().strip()
 
     if nome in dicio:
-        print(f'Cliente encontrado!')
+        print(f'Cliente encontrado!\n')
+        print('>>> INFORMAÇÕES ATUAIS\n')
 
-        print()
-        print('>>> INFORMAÇÕES ATUAIS')
-        print()
+        utils.exibir_dados_cliente(nome, dicio)
 
-        exibir_dados_cliente(nome, dicio)
-
-        print()
-        print('Digite sua escolha: - nome, - sexo, - idade, - celular, - email, - cidade: ',sep=',')
+        print('\nDigite sua escolha: - nome, - sexo, - idade, - celular, - email, - cidade: ',sep=',')
         campo = input().lower().strip()
 
-        if campo in dicio[nome]:
+        if campo in dicio[nome]:        #muda o valor antigo para o novo valor.
             novo_valor = input(f'Novo valor para {campo}: ')
             dicio[nome][campo] = novo_valor
 
@@ -106,7 +86,7 @@ def pesquisar_cliente(clientes):
     print()
     if nome in dicio:
         for i, j in dicio[nome].items():
-            print(f'{i.capitalize()}: {j}')
+            print(f'{i}: {j}')
             sleep(1)
     else:
         print('Cliente não encontrado.')
@@ -132,13 +112,4 @@ def excluir_cliente(clientes):
         else:
             print('Exclusão cancelada.')
 
-
-def exibir_dados_cliente(nome, info):
-    print(f'Nome: {nome}')
-    print(f'Sexo: {info[nome]["sexo"]}')
-    print(f'idade: {info[nome]["idade"]}')
-    print(f'Celular: {info[nome]["celular"]}')
-    print(f'Email: {info[nome]["email"]}')
-    print(f'Cidade: {info[nome]["cidade"]}')
-    print('-' * 30)
     
