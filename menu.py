@@ -1,24 +1,5 @@
 from time import sleep
-import cliente, comissao, faturamento
-
-def criar_menu(titulo, opcoes, tam=40):
-    while True:
-        print(f'+{"-" * tam}+')
-        print(f'|{titulo:^{tam}}|')
-        print(f'+{"-" * tam}+')
-
-        for numero, descricao in opcoes.items():
-            print(f'|{f'{numero} - {descricao}':<{tam}}|')
-
-        print(f'+{"-" * tam}+')
-
-        op = input("Escolha: ")
-
-        if op in opcoes:
-            return op
-
-        print('Opção inválida.')
-
+import cliente, faturamento, status, utils
 
 def menu_principal():
     opcoes = {
@@ -30,7 +11,7 @@ def menu_principal():
     }
 
     while True:
-        op = criar_menu('BLUEART MANAGER', opcoes)
+        op = utils.criar_menu('BLUEART MANAGER', opcoes)
 
         if op == '0':
             print('Encerrando...')
@@ -62,7 +43,7 @@ def menu_clientes():
     }
 
     while True:
-        op = criar_menu('CLIENTES', opcoes)
+        op = utils.criar_menu('CLIENTES', opcoes)
 
         if op == '0':
             print('Voltando...')
@@ -70,8 +51,7 @@ def menu_clientes():
             return
 
         match op:
-            case '1':
-                cliente.verifica_arquivo()
+            case '1':    
                 cliente.add_cliente()
 
             case '2':
@@ -98,7 +78,7 @@ def menu_comissao():
     }
 
     while True:
-        op = criar_menu('COMISSÕES', opcoes)
+        op = utils.criar_menu('COMISSÕES', opcoes)
 
         if op == '0':
             print('Voltando...')
@@ -108,19 +88,19 @@ def menu_comissao():
 
         match op:
             case '1':
-                comissao.listar_comissoes_por_status('Em andamento')
+                status.listar_comissoes_por_status('Em andamento')
 
             case '2':
-                comissao.listar_comissoes_por_status('Pendente')
+                status.listar_comissoes_por_status('Pendente')
 
             case '3':
-                comissao.listar_comissoes_por_status('Finalizada')
+                status.listar_comissoes_por_status('Finalizada')
 
             case '4':
-                comissao.listar_comissoes_por_status('Cancelada')
+                status.listar_comissoes_por_status('Cancelada')
 
             case '5':
-                comissao.mudar_status_comissao()
+                status.mudar_status_comissao()
 
 
 def menu_faturamento():
@@ -132,7 +112,7 @@ def menu_faturamento():
 
 
     while True:
-        op = criar_menu('FATURAMENTO', opcoes)
+        op = utils.criar_menu('FATURAMENTO', opcoes)
 
         if op == '0':
             print('Voltando...')
@@ -144,3 +124,7 @@ def menu_faturamento():
                 
             case '2':
                 faturamento.faturamento_mes()
+
+
+def menu_configuracao():
+    pass
