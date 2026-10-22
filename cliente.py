@@ -17,7 +17,7 @@ def add_cliente():
 
         #chama a função add comissão para fazer as perguntas e guardar as respostas nas duas variaveis.
 
-        opcao, confirm = comissao.add_comissao(nome) 
+        opcao, confirm = comissao.mostrar_opcao(nome) 
         stts = status.status_padrao()         #stts padrão 'em andamento'
         
         if confirm == 'S':
@@ -33,11 +33,11 @@ def add_cliente():
 
             print()
             print('>>> Cliente adicionado!')
-            print(f'Agora temos {len(clientes)} clientes cadastrados.')
+            print(f'Agora temos {len(clientes)} clientes cadastrados.\n')
             return clientes  
 
         else:
-            print('Cliente não adicionado. Voltando ao menu principal...')
+            print('Cliente não adicionado. Voltando ao menu principal...\n')
             sleep(2)
             return
 
@@ -49,32 +49,49 @@ def listar_clientes(clientes):
     dicio = arquivo.ler_json(clientes)
 
     for nome, info in dicio.items():
-        utils.exibir_dados_cliente(nome, dicio)
-
+        utils.exibir_dados_cliente(nome, info)
+        
 
 
 def editar_cliente(clientes):
     print('\n--- EDITAR CLIENTE ---')
 
     dicio = arquivo.ler_json(clientes)
-        
     nome = input('Nome do cliente que deseja encontrar: ').capitalize().strip()
 
     if nome in dicio:
         print(f'Cliente encontrado!\n')
-        print('>>> INFORMAÇÕES ATUAIS\n')
+        print('>>> INFORMAÇÕES ATUAIS')
+        utils.exibir_dados_cliente(nome, dicio[nome])
 
-        utils.exibir_dados_cliente(nome, dicio)
+        print('\nVocê pode adicionar novos campos ou editar os antigos.\n')
+        print('Ex: descricao: O cliente quiz um semi realismo de corpo inteiro,personagem adicional...')
 
-        print('\nDigite sua escolha: - nome, - sexo, - idade, - celular, - email, - cidade: ',sep=',')
+        print('\n>> Digite sua escolha:')
         campo = input().lower().strip()
-
-        if campo in dicio[nome]:        #muda o valor antigo para o novo valor.
+     
+        if campo in dicio[nome]:       #muda o valor antigo para o novo valor.
             novo_valor = input(f'Novo valor para {campo}: ')
             dicio[nome][campo] = novo_valor
-
             arquivo.salvar_json('clientes.json', dicio)
 
+        if campo not in dicio[nome]:
+            print('\nDeseja adicionar esse campo a esse cliente? [S/N]')
+            resposta = input().strip().upper()
+
+            if resposta == 'N':
+                print('\nOkay.')
+
+            elif resposta =='S':
+                print('\nConteúdo:')
+                valor = input()
+                dicio[nome][campo] = valor
+                arquivo.salvar_json('clientes.json', dicio)
+            else:
+
+                print('Desculpe. Tente novamente.')
+    else:
+        print('Cliente não encontrado.')
 
 
 def pesquisar_cliente(clientes):
@@ -112,4 +129,3 @@ def excluir_cliente(clientes):
         else:
             print('Exclusão cancelada.')
 
-    

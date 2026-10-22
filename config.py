@@ -4,20 +4,24 @@ from time import sleep
 def analise():
     artes = arquivo.verifica_arquivo('artes.json', 'artes')
     print('--- CONFIGURAÇÃO ESTILOS DE ARTE ---\n')
-
-    if not artes: 
-        estilo = comissao.estilo_arte(artes)
-    else:
-        escolha = input('Quer adicionar mais? [S/N]: ').upper().strip()
-        print()
-
-        if escolha == 'N':
-            print('Okay!')
-            sleep(2)
-            
-        elif escolha == 'S':
+    while True:
+        if not artes: 
             estilo = comissao.estilo_arte(artes)
+        else:
+            print('> Você já tem estilos salvos.')
+            escolha = input('Quer adicionar mais? [S/N]: ').upper().strip()
+            print()
 
+            if escolha == 'N':
+                print('Okay!')
+                break
+                sleep(2)
+                
+            elif escolha == 'S':
+                estilo = comissao.estilo_arte(artes)
+                
+            else:
+                print('Resposta inválida.')
 
 
 def Artista():      # Pega os dados do usuario e coloca em um dicionário
@@ -44,7 +48,7 @@ def Artista():      # Pega os dados do usuario e coloca em um dicionário
         
     else:
         print(f'>>> Bem vindo(a) de volta {dados['nome_exibicao']}! <<<'.upper())
-        sleep(3)
+        sleep(2)
 
     return dados
 

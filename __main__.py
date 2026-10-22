@@ -1,8 +1,8 @@
-import config, menu, utils
+import config, menu
 from time import sleep
 
-config.Artista()
-utils.limpar_terminal()               
+config.Artista()         
+print()
+config.analise()
+print()
 menu.menu_principal()
-
-# Por enquanto está tudo funcionando de forma básica, mas futuramente irei refatorar o código e adicionar mais funcionalidades.
