@@ -1,5 +1,5 @@
 from time import sleep
-import cliente, faturamento, status, utils
+import cliente, faturamento, status, utils, config
 
 def menu_principal():
     opcoes = {
@@ -29,7 +29,7 @@ def menu_principal():
                 menu_faturamento()
 
             case '4':
-                print('Em desenvolvimento.')
+                menu_configuracao()
 
 
 def menu_clientes():
@@ -94,7 +94,7 @@ def menu_comissao():
                 status.listar_comissoes_por_status('Pendente')
 
             case '3':
-                status.listar_comissoes_por_status('Finalizada')
+                status.listar_comissoes_por_status('Finalizado')
 
             case '4':
                 status.listar_comissoes_por_status('Cancelada')
@@ -116,6 +116,7 @@ def menu_faturamento():
 
         if op == '0':
             print('Voltando...')
+            sleep(2)
             return
 
         match op:
@@ -127,4 +128,28 @@ def menu_faturamento():
 
 
 def menu_configuracao():
-    pass
+    opcoes = {
+            '1': 'Editar seus dados',
+            '2': 'Add estilos de arte',
+            '3': 'Excluir conta',
+            '0': 'Voltar ao menu principal'
+        }
+
+    while True:
+        op = utils.criar_menu('CONFIGURAÇÃO', opcoes)
+
+        if op == '0':
+            print('Voltando...')
+            sleep(2)
+            return
+
+        match op:
+            case '1':
+                config.editar_dados_artista()
+
+            case '2':
+                config.analise()
+
+            case '3':
+                config.excluir_conta()
+                
