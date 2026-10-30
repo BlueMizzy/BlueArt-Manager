@@ -16,29 +16,15 @@ Além de ser uma ferramenta pessoal, este projeto representa minha evolução co
 
 - Cadastro do artista
 - Cadastro de clientes
+- Cadastro de comissões
 - Leitura e escrita de arquivos JSON
-- Verificação automática de configurações
-- Menu principal
-- Sistema de escolhas da comissão
-      - Sketch
-      - Flat Color
-      - Full Render
-- Diferentes tamanhos
-      - Busto
-      - Half Body
-      - Full Body
-- Sistema de adicionais
-      - Personagens
-      - Fundo detalhado
-      - Armas
-      - Animais
-- Calculo automático do valor final
+- Menus
+
 
 ---
 
 ## Planejamento futuro
 
-- Histórico completo das comissões
 - Sistema de faturamento
 - Banco de dados MySQL
 - Login de usuários
@@ -66,4 +52,5 @@ Cada nova funcionalidade representa um novo conceito aprendido durante meus estu
 
 ## Status
 
-Em desenvolvimento
+PAUSADO.
+O Projeto irá ficar sem atualizações por tempo indeterminado para fins de outros estudos.
